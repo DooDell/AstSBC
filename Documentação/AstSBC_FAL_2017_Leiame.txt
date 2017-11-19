@@ -1,0 +1,881 @@
+FAL - (SEGURANÇA COM ASTSBC-FAL PARA ASTERISK 1.8 e 13.1)
+---------------------------------------------------------
+
+ASTERISK INSTALADO DO ZERO
+===========================
+
+1- Antes de iniciar a instalação do asterisk, acesse o diretorio abaixo e verifique se o arquivo chan_sip.c esta nesse formato:
+# vim /usr/src/fontes/certified-asterisk-13.1-sbc/channels/chan_sip.c
+ou
+# vim /usr/src/fontes/asterisk-1.8.32.3/channels/chan_sip.c
+
+
+
+if (!(buf = ast_str_thread_get(&check_auth_buf, CHECK_AUTH_BUF_INITLEN))) {
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+
+if (res == AST_DYNSTR_BUILD_FAILED) {
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+
+/* Verify that digest username matches  the username we auth as */
+	if (strcmp(username, keys[K_USER].s) && !is_bogus_peer) {
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+
+/* Ok, we have a bad username/secret pair */
+	/* Tell the UAS not to re-send this authentication data, because
+	   it will continue to fail
+	*/
+
+	return AUTH_SECRET_FAILED;
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+
+
+
+
+if (parse_uri_legacy_check(c, "sip:,sips:", &name, &unused_password, &domain, NULL)) {
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+
+
+if (res < 0) {
+		RAII_VAR(struct ast_json *, blob, NULL, ast_json_unref);
+/* Verificar AstSBC */
+		switch (res) {
+		case AUTH_SECRET_FAILED:
+			/* Wrong password in authentication. Go away, don't try again until you fixed it */
+			transmit_response(p, "403 Forbidden", &p->initreq);
+			if (global_authfailureevents) {
+				const char *peer_addr = ast_strdupa(ast_sockaddr_stringify_addr(addr));
+				const char *peer_port = ast_strdupa(ast_sockaddr_stringify_port(addr));
+
+				blob = ast_json_pack("{s: s, s: s, s: s, s: s}",
+					"peer_status", "Rejected",
+					"cause", "AUTH_SECRET_FAILED",
+					"address", peer_addr,
+					"port", peer_port);
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);	
+
+			}
+			break;
+
+
+
+/* URI not found */
+				if (res == AUTH_PEER_NOT_DYNAMIC) {
+					transmit_response(p, "403 Forbidden", &p->initreq);
+					if (global_authfailureevents) {
+						const char *peer_addr = ast_strdupa(ast_sockaddr_stringify_addr(addr));
+						const char *peer_port = ast_strdupa(ast_sockaddr_stringify_port(addr));
+
+						blob = ast_json_pack("{s: s, s: s, s: s, s: s}",
+							"peer_status", "Rejected",
+							"cause", "AUTH_PEER_NOT_DYNAMIC",
+							"address", peer_addr,
+							"port", peer_port);
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);	
+
+					}
+
+
+
+
+
+/*! \brief Handle SIP response to INVITE dialogue */
+static void handle_response_invite(struct sip_pvt *p, int resp, const char *rest, struct sip_request *req, uint32_t seqno)
+{
+	int outgoing = ast_test_flag(&p->flags[0], SIP_OUTGOING);
+	int res = 0;
+	int xmitres = 0;
+	int reinvite = ast_test_flag(&p->flags[1], SIP_PAGE2_DIALOG_ESTABLISHED);
+	char *p_hdrval;
+	int rtn;
+	struct ast_party_connected_line connected;
+	struct ast_set_party_connected_line update_connected;
+	struct ast_sockaddr *addr; /* AstSBC */
+
+
+
+
+
+
+/* Then we AUTH */
+		ast_string_field_set(p, theirtag, NULL);	/* forget their old tag, so we don't match tags when getting response */
+		if (!req->ignore) {
+			if (p->authtries < MAX_AUTHTRIES) {
+				p->invitestate = INV_CALLING;
+			}
+			if (p->authtries == MAX_AUTHTRIES || do_proxy_auth(p, req, resp, SIP_INVITE, 1)) {
+			  /* AstSBC "svwar"*/
+                                char block_str[256];
+                                strcpy(block_str,"/etc/asterisk/sip_security.sh ");
+                                strcat(block_str, ast_sockaddr_stringify(addr));
+                                system(block_str);
+				
+				ast_log(LOG_NOTICE, "Failed to authenticate on INVITE to '%s'\n", sip_get_header(&p->initreq, "From"));
+				pvt_set_needdestroy(p, "failed to authenticate on INVITE");
+				sip_alreadygone(p);
+				if (p->owner) {
+					ast_queue_control(p->owner, AST_CONTROL_CONGESTION);
+				}
+			}
+		}
+		break;
+
+	case 403: /* Forbidden */
+		/* First we ACK */
+		xmitres = transmit_request(p, SIP_ACK, seqno, XMIT_UNRELIABLE, FALSE);
+		/* AstSBC "svwar"*/
+                	char block_str[256];
+                	strcpy(block_str,"/etc/asterisk/sip_security.sh ");
+                	strcat(block_str, ast_sockaddr_stringify(addr));
+                	system(block_str);
+		
+		ast_log(LOG_WARNING, "Received response: \"Forbidden\" from '%s'\n", sip_get_header(&p->initreq, "From"));
+		if (!req->ignore && p->owner) {
+			sip_queue_hangup_cause(p, hangup_sip2cause(resp));
+		}
+		break;
+
+
+
+
+
+
+
+
+switch (resp) {
+	case 401:	/* Unauthorized */
+		if (p->authtries == MAX_AUTHTRIES || do_register_auth(p, req, resp)) {
+		/* AstSBC */
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);	
+
+			ast_log(LOG_NOTICE, "Failed to authenticate on REGISTER to '%s@%s' (Tries %d)\n", p->registry->username, p->registry->hostname, p->authtries);
+			pvt_set_needdestroy(p, "failed to authenticate REGISTER");
+		}
+		break;
+	case 403:	/* Forbidden */
+		if (global_reg_retry_403) {
+			ast_log(LOG_NOTICE, "Treating 403 response to REGISTER as non-fatal for %s@%s\n",
+				p->registry->username, p->registry->hostname);
+			ast_string_field_set(r, nonce, "");
+			ast_string_field_set(p, nonce, "");
+			break;
+		}
+		/* AstSBC */
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);	
+
+		ast_log(LOG_WARNING, "Forbidden - wrong password on authentication for REGISTER for '%s' to '%s'\n", p->registry->username, p->registry->hostname);
+		AST_SCHED_DEL_UNREF(sched, r->timeout, ao2_t_ref(r, -1, "reg ptr unref from handle_response_register 403"));
+		r->regstate = REG_STATE_NOAUTH;
+		sip_publish_registry(r->username, r->hostname, regstate2str(r->regstate));
+		pvt_set_needdestroy(p, "received 403 response");
+		break;
+	case 404:	/* Not found */
+		/* AstSBC */
+                	strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+                	strcat(block_str, ast_sockaddr_stringify(addr));
+                	system(block_str);
+		
+		ast_log(LOG_WARNING, "Got 404 Not found on SIP register to service %s@%s, giving up\n", p->registry->username, p->registry->hostname);
+		pvt_set_needdestroy(p, "received 404 response");
+		if (r->call)
+			r->call = dialog_unref(r->call, "unsetting registry->call pointer-- case 404");
+		r->regstate = REG_STATE_REJECTED;
+		sip_publish_registry(r->username, r->hostname, regstate2str(r->regstate));
+		AST_SCHED_DEL_UNREF(sched, r->timeout, ao2_t_ref(r, -1, "reg ptr unref from handle_response_register 404"));
+		break;
+
+
+
+
+
+
+
+case 403: /* Forbidden - we failed authentication */
+			if (sipmethod == SIP_INVITE)
+				handle_response_invite(p, resp, rest, req, seqno);
+			else if (sipmethod == SIP_SUBSCRIBE)
+				handle_response_subscribe(p, resp, rest, req, seqno);
+			else if (p->registry && sipmethod == SIP_REGISTER)
+				handle_response_register(p, resp, rest, req, seqno);
+			else {
+		/* AstSBC */
+		struct ast_sockaddr *addr;
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+
+
+
+/* Do authentication if this OPTIONS request began the dialog */
+		copy_request(&p->initreq, req);
+		set_pvt_allowed_methods(p, req);
+		res = check_user(p, req, SIP_OPTIONS, e, XMIT_UNRELIABLE, addr);
+		if (res == AUTH_CHALLENGE_SENT) {
+			sip_scheddestroy(p, DEFAULT_TRANS_TIMEOUT);
+			return 0;
+		}
+		if (res < 0) { /* Something failed in authentication */
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+
+
+
+p->invitestate = INV_COMPLETED;		/* Needs to restart in another INVITE transaction */
+			goto request_invite_cleanup;
+		}
+		if (res < 0) { /* Something failed in authentication */
+			/* AstSBC */
+			char block_str[256];
+			strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+			strcat(block_str, ast_sockaddr_stringify(addr));
+			system(block_str);
+
+
+
+
+
+
+
+/*
+				 * XXX We would have to implement collecting more digits in
+				 * chan_sip for any other schemes of overlap dialing.
+				 *
+				 * For SIP_PAGE2_ALLOWOVERLAP_DTMF it is better to do this in
+				 * the dialplan using the Incomplete application rather than
+				 * having the channel driver do it.
+				 */
+				/* Fall through */
+			case SIP_GET_DEST_EXTEN_NOT_FOUND:
+				{
+					char *decoded_exten = ast_strdupa(p->exten);
+					transmit_response_reliable(p, "404 Not Found", req);
+					ast_uri_decode(decoded_exten, ast_uri_sip_user);
+					/* AstSBC svmap*/
+					char block_str[256];
+					strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+					strcat(block_str, ast_sockaddr_stringify(addr));
+					system(block_str);
+
+
+
+
+
+	       switch (res) {
+                 case AUTH_SECRET_FAILED:
+                         reason = "Wrong password";
+                         break;
+                 case AUTH_USERNAME_MISMATCH:
+                         reason = "Username/auth name mismatch";
+                         break;
+                 case AUTH_NOT_FOUND:
+                         reason = "No matching peer found";
+                         break;
+                 case AUTH_UNKNOWN_DOMAIN:
+                         reason = "Not a local domain";
+                         break;
+                 case AUTH_PEER_NOT_DYNAMIC:
+                         reason = "Peer is not supposed to register";
+                         break;
+                 case AUTH_ACL_FAILED:
+                         reason = "Device does not match ACL";
+                         break;
+                 case AUTH_BAD_TRANSPORT:
+                         reason = "Device not configured to use this transport type";
+                         break;
+                 case AUTH_RTP_FAILED:
+                         reason = "RTP initialization failed";
+                         break;
+                 default:
+                         reason = "Unknown failure";
+                         break;
+                 }
+ 
+                 	/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+2 - Faça a instalação do Asterisk normal.
+
+3 - Depois coloque os arquivos "sip_security.sh", "sbc_asterisk.sh" e "remove_ip.sh" na pasta /etc/asterisk/.
+
+4 - Concedemos permissão de execussão aos arquivos abaixo:
+# chmod +x /etc/asterisk/sip_security.sh
+# chmod +x /etc/asterisk/sbc_asterisk.sh
+# chmod +x /etc/asterisk/remove_ip.sh
+
+5 - Editamos e direcinamos a leitura do arquivo na inicialização para dentro do diretório /etc/rc.local:
+OBS.: Colocar a linha abaixo, antes do exit 0
+# vim /etc/rc.local
+
+/etc/asterisk/sbc_asterisk.sh start
+exit 0
+
+:wq! (Salvamos)
+
+
+RENICIAMOS A MÁQUINA E AGORA É SO TESTAR!!!
+
+
+6 - Verificamos se as regras do iptables foram carregadas
+# iptables -vnL
+Chain INPUT (policy ACCEPT 29 packets, 2628 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 18 packets, 1974 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain SBCBLOCK (0 references)
+ pkts bytes target     prot opt in     out     source               destination
+
+
+
+7 - Vizualizando as cadeias depois de IP DROPADO pelo IPTABLES:
+# iptables -vnL
+Chain INPUT (policy ACCEPT 207 packets, 17690 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+ 1725  654K SBCBLOCK   all  --  *      *       192.168.25.59        0.0.0.0/0            /* Regra Criada pelo SBC Asterisk »»»BRUTE FORCE««« */
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 SBCBLOCK   all  --  *      *       0.0.0.0/0            192.168.25.59        /* Regra Criada pelo SBC Asterisk »»»BRUTE FORCE««« */
+
+Chain OUTPUT (policy ACCEPT 148 packets, 21364 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   10  5364 SBCBLOCK   all  --  *      *       0.0.0.0/0            192.168.25.59        /* Regra Criada pelo SBC Asterisk »»»BRUTE FORCE««« */
+
+Chain SBCBLOCK (3 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 1725  654K LOG        all  --  *      *       192.168.25.59        0.0.0.0/0            /* Log Criado pelo SBC Asterisk »»»BRUTE FORCE««« */ LOG flags 0 level 4 prefix "SBC LIST DROP"
+ 1725  654K DROP       all  --  *      *       192.168.25.59        0.0.0.0/0            /* Regra Criada pelo SBC Asterisk »»»BRUTE FORCE««« */ 
+
+Se for seu SBC esta 100% funcional.
+
+OBS: Nosso AstSBC e paranoico, basta um erro de password o mesmo e trancado no firewall. Caso erre a senha de uma extensão telefonica remova o ip do endpoint do firewall para tentar novamente.
+
+
+
+ASTERISK JÁ INSTALADO PRECISANDO DE SEGURANÇA
+==============================================
+
+1 - Acesso o arquivo chan_sip.c e acrescente as linhas abaixo:
+# vim /usr/src/fontes/certified-asterisk-13.1-sbc/channels/chan_sip.c
+ou
+# vim /usr/src/fontes/asterisk-1.8.32.3/channels/chan_sip.c
+
+
+if (!(buf = ast_str_thread_get(&check_auth_buf, CHECK_AUTH_BUF_INITLEN))) {
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+
+if (res == AST_DYNSTR_BUILD_FAILED) {
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+
+/* Verify that digest username matches  the username we auth as */
+	if (strcmp(username, keys[K_USER].s) && !is_bogus_peer) {
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+
+/* Ok, we have a bad username/secret pair */
+	/* Tell the UAS not to re-send this authentication data, because
+	   it will continue to fail
+	*/
+
+	return AUTH_SECRET_FAILED;
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+
+
+
+
+if (parse_uri_legacy_check(c, "sip:,sips:", &name, &unused_password, &domain, NULL)) {
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+
+
+if (res < 0) {
+		RAII_VAR(struct ast_json *, blob, NULL, ast_json_unref);
+/* Verificar AstSBC */
+		switch (res) {
+		case AUTH_SECRET_FAILED:
+			/* Wrong password in authentication. Go away, don't try again until you fixed it */
+			transmit_response(p, "403 Forbidden", &p->initreq);
+			if (global_authfailureevents) {
+				const char *peer_addr = ast_strdupa(ast_sockaddr_stringify_addr(addr));
+				const char *peer_port = ast_strdupa(ast_sockaddr_stringify_port(addr));
+
+				blob = ast_json_pack("{s: s, s: s, s: s, s: s}",
+					"peer_status", "Rejected",
+					"cause", "AUTH_SECRET_FAILED",
+					"address", peer_addr,
+					"port", peer_port);
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);	
+
+			}
+			break;
+
+
+
+/* URI not found */
+				if (res == AUTH_PEER_NOT_DYNAMIC) {
+					transmit_response(p, "403 Forbidden", &p->initreq);
+					if (global_authfailureevents) {
+						const char *peer_addr = ast_strdupa(ast_sockaddr_stringify_addr(addr));
+						const char *peer_port = ast_strdupa(ast_sockaddr_stringify_port(addr));
+
+						blob = ast_json_pack("{s: s, s: s, s: s, s: s}",
+							"peer_status", "Rejected",
+							"cause", "AUTH_PEER_NOT_DYNAMIC",
+							"address", peer_addr,
+							"port", peer_port);
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);	
+
+					}
+
+
+
+
+
+/*! \brief Handle SIP response to INVITE dialogue */
+static void handle_response_invite(struct sip_pvt *p, int resp, const char *rest, struct sip_request *req, uint32_t seqno)
+{
+	int outgoing = ast_test_flag(&p->flags[0], SIP_OUTGOING);
+	int res = 0;
+	int xmitres = 0;
+	int reinvite = ast_test_flag(&p->flags[1], SIP_PAGE2_DIALOG_ESTABLISHED);
+	char *p_hdrval;
+	int rtn;
+	struct ast_party_connected_line connected;
+	struct ast_set_party_connected_line update_connected;
+	struct ast_sockaddr *addr; /* AstSBC */
+
+
+
+
+
+
+/* Then we AUTH */
+		ast_string_field_set(p, theirtag, NULL);	/* forget their old tag, so we don't match tags when getting response */
+		if (!req->ignore) {
+			if (p->authtries < MAX_AUTHTRIES) {
+				p->invitestate = INV_CALLING;
+			}
+			if (p->authtries == MAX_AUTHTRIES || do_proxy_auth(p, req, resp, SIP_INVITE, 1)) {
+			  /* AstSBC "svwar"*/
+                                char block_str[256];
+                                strcpy(block_str,"/etc/asterisk/sip_security.sh ");
+                                strcat(block_str, ast_sockaddr_stringify(addr));
+                                system(block_str);
+				
+				ast_log(LOG_NOTICE, "Failed to authenticate on INVITE to '%s'\n", sip_get_header(&p->initreq, "From"));
+				pvt_set_needdestroy(p, "failed to authenticate on INVITE");
+				sip_alreadygone(p);
+				if (p->owner) {
+					ast_queue_control(p->owner, AST_CONTROL_CONGESTION);
+				}
+			}
+		}
+		break;
+
+	case 403: /* Forbidden */
+		/* First we ACK */
+		xmitres = transmit_request(p, SIP_ACK, seqno, XMIT_UNRELIABLE, FALSE);
+		/* AstSBC "svwar"*/
+                	char block_str[256];
+                	strcpy(block_str,"/etc/asterisk/sip_security.sh ");
+                	strcat(block_str, ast_sockaddr_stringify(addr));
+                	system(block_str);
+		
+		ast_log(LOG_WARNING, "Received response: \"Forbidden\" from '%s'\n", sip_get_header(&p->initreq, "From"));
+		if (!req->ignore && p->owner) {
+			sip_queue_hangup_cause(p, hangup_sip2cause(resp));
+		}
+		break;
+
+
+
+
+
+
+
+
+switch (resp) {
+	case 401:	/* Unauthorized */
+		if (p->authtries == MAX_AUTHTRIES || do_register_auth(p, req, resp)) {
+		/* AstSBC */
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);	
+
+			ast_log(LOG_NOTICE, "Failed to authenticate on REGISTER to '%s@%s' (Tries %d)\n", p->registry->username, p->registry->hostname, p->authtries);
+			pvt_set_needdestroy(p, "failed to authenticate REGISTER");
+		}
+		break;
+	case 403:	/* Forbidden */
+		if (global_reg_retry_403) {
+			ast_log(LOG_NOTICE, "Treating 403 response to REGISTER as non-fatal for %s@%s\n",
+				p->registry->username, p->registry->hostname);
+			ast_string_field_set(r, nonce, "");
+			ast_string_field_set(p, nonce, "");
+			break;
+		}
+		/* AstSBC */
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);	
+
+		ast_log(LOG_WARNING, "Forbidden - wrong password on authentication for REGISTER for '%s' to '%s'\n", p->registry->username, p->registry->hostname);
+		AST_SCHED_DEL_UNREF(sched, r->timeout, ao2_t_ref(r, -1, "reg ptr unref from handle_response_register 403"));
+		r->regstate = REG_STATE_NOAUTH;
+		sip_publish_registry(r->username, r->hostname, regstate2str(r->regstate));
+		pvt_set_needdestroy(p, "received 403 response");
+		break;
+	case 404:	/* Not found */
+		/* AstSBC */
+                	strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+                	strcat(block_str, ast_sockaddr_stringify(addr));
+                	system(block_str);
+		
+		ast_log(LOG_WARNING, "Got 404 Not found on SIP register to service %s@%s, giving up\n", p->registry->username, p->registry->hostname);
+		pvt_set_needdestroy(p, "received 404 response");
+		if (r->call)
+			r->call = dialog_unref(r->call, "unsetting registry->call pointer-- case 404");
+		r->regstate = REG_STATE_REJECTED;
+		sip_publish_registry(r->username, r->hostname, regstate2str(r->regstate));
+		AST_SCHED_DEL_UNREF(sched, r->timeout, ao2_t_ref(r, -1, "reg ptr unref from handle_response_register 404"));
+		break;
+
+
+
+
+
+
+
+case 403: /* Forbidden - we failed authentication */
+			if (sipmethod == SIP_INVITE)
+				handle_response_invite(p, resp, rest, req, seqno);
+			else if (sipmethod == SIP_SUBSCRIBE)
+				handle_response_subscribe(p, resp, rest, req, seqno);
+			else if (p->registry && sipmethod == SIP_REGISTER)
+				handle_response_register(p, resp, rest, req, seqno);
+			else {
+		/* AstSBC */
+		struct ast_sockaddr *addr;
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+
+
+
+/* Do authentication if this OPTIONS request began the dialog */
+		copy_request(&p->initreq, req);
+		set_pvt_allowed_methods(p, req);
+		res = check_user(p, req, SIP_OPTIONS, e, XMIT_UNRELIABLE, addr);
+		if (res == AUTH_CHALLENGE_SENT) {
+			sip_scheddestroy(p, DEFAULT_TRANS_TIMEOUT);
+			return 0;
+		}
+		if (res < 0) { /* Something failed in authentication */
+		/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+
+
+
+
+
+p->invitestate = INV_COMPLETED;		/* Needs to restart in another INVITE transaction */
+			goto request_invite_cleanup;
+		}
+		if (res < 0) { /* Something failed in authentication */
+			/* AstSBC */
+			char block_str[256];
+			strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+			strcat(block_str, ast_sockaddr_stringify(addr));
+			system(block_str);
+
+
+
+
+
+
+
+/*
+				 * XXX We would have to implement collecting more digits in
+				 * chan_sip for any other schemes of overlap dialing.
+				 *
+				 * For SIP_PAGE2_ALLOWOVERLAP_DTMF it is better to do this in
+				 * the dialplan using the Incomplete application rather than
+				 * having the channel driver do it.
+				 */
+				/* Fall through */
+			case SIP_GET_DEST_EXTEN_NOT_FOUND:
+				{
+					char *decoded_exten = ast_strdupa(p->exten);
+					transmit_response_reliable(p, "404 Not Found", req);
+					ast_uri_decode(decoded_exten, ast_uri_sip_user);
+					/* AstSBC svmap*/
+					char block_str[256];
+					strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+					strcat(block_str, ast_sockaddr_stringify(addr));
+					system(block_str);
+
+
+
+
+	       switch (res) {
+                 case AUTH_SECRET_FAILED:
+                         reason = "Wrong password";
+                         break;
+                 case AUTH_USERNAME_MISMATCH:
+                         reason = "Username/auth name mismatch";
+                         break;
+                 case AUTH_NOT_FOUND:
+                         reason = "No matching peer found";
+                         break;
+                 case AUTH_UNKNOWN_DOMAIN:
+                         reason = "Not a local domain";
+                         break;
+                 case AUTH_PEER_NOT_DYNAMIC:
+                         reason = "Peer is not supposed to register";
+                         break;
+                 case AUTH_ACL_FAILED:
+                         reason = "Device does not match ACL";
+                         break;
+                 case AUTH_BAD_TRANSPORT:
+                         reason = "Device not configured to use this transport type";
+                         break;
+                 case AUTH_RTP_FAILED:
+                         reason = "RTP initialization failed";
+                         break;
+                 default:
+                         reason = "Unknown failure";
+                         break;
+                 }
+ 
+                 	/* AstSBC */
+		char block_str[256];
+		strcpy(block_str, "/etc/asterisk/sip_security.sh ");
+		strcat(block_str, ast_sockaddr_stringify(addr));
+		system(block_str);
+
+	       
+2 - Recompilamos o asterisk 
+# ./configure 
+# make clean
+# make
+# make install
+
+
+3 - Reiniciamos o serviço do asterisk
+# /etc/init.d/asterisk restart  
+
+
+4 -Depois coloque os arquivos "sip_security.sh", "sbc_asterisk.sh" e "remove_ip.sh" na pasta /etc/asterisk/.
+
+5 - Concedemos permissão de execussão aos arquivos abaixo:
+# chmod +x /etc/asterisk/sip_security.sh
+# chmod +x /etc/asterisk/sbc_asterisk.sh
+# chmod +x /etc/asterisk/remove_ip.sh
+
+
+6 - Editamos e direcinamos a leitura do arquivo na inicialização para dentro do diretório /etc/rc.local:
+OBS.: Colocar a linha abaixo, antes do exit 0
+# vim /etc/rc.local
+
+/etc/asterisk/sbc_asterisk.sh start
+exit 0
+
+:wq! (Salvamos)
+
+
+RENICIAMOS A MÁQUINA E AGORA É SO TESTAR!!!
+
+
+7 - Verificamos se as regras do iptables foram carregadas
+# iptables -vnL
+Chain INPUT (policy ACCEPT 29 packets, 2628 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 18 packets, 1974 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain SBCBLOCK (0 references)
+ pkts bytes target     prot opt in     out     source               destination
+
+
+
+8 - Vizualizando as cadeias depois de IP DROPADO pelo IPTABLES:
+# iptables -vnL
+Chain INPUT (policy ACCEPT 207 packets, 17690 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+ 1725  654K SBCBLOCK   all  --  *      *       192.168.25.59        0.0.0.0/0            /* Regra Criada pelo SBC Asterisk »»»BRUTE FORCE««« */
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 SBCBLOCK   all  --  *      *       0.0.0.0/0            192.168.25.59        /* Regra Criada pelo SBC Asterisk »»»BRUTE FORCE««« */
+
+Chain OUTPUT (policy ACCEPT 148 packets, 21364 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   10  5364 SBCBLOCK   all  --  *      *       0.0.0.0/0            192.168.25.59        /* Regra Criada pelo SBC Asterisk »»»BRUTE FORCE««« */
+
+Chain SBCBLOCK (3 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 1725  654K LOG        all  --  *      *       192.168.25.59        0.0.0.0/0            /* Log Criado pelo SBC Asterisk »»»BRUTE FORCE««« */ LOG flags 0 level 4 prefix "SBC LIST DROP"
+ 1725  654K DROP       all  --  *      *       192.168.25.59        0.0.0.0/0            /* Regra Criada pelo SBC Asterisk »»»BRUTE FORCE««« */ 
+
+Se for seu SBC esta 100% funcional.
+
+OBS: Nosso AstSBC e paranoico, basta um erro de password o mesmo e trancado no firewall. Caso erre a senha de uma extensão telefonica remova o ip do endpoint do firewall para tentar novamente.
+
+
+
+****************************************************************************************
+FAL - (LIBERANDO UM IP BLOQUADO DA CADEIA SBCBLOCK)
+----------------------------------------------------
+
+1 - Verificando o numero da linha em que o IP está bloqueado:
+# iptables -L -t filter --line-numbers
+
+
+Chain INPUT (policy ACCEPT)
+num  target     prot opt source               destination         
+1    SBCBLOCK   all  --  anywhere             anywhere             /* Regra Criada pelo SBC Asterisk »»»BRUTE FORCE««« */
+
+Chain FORWARD (policy ACCEPT)
+num  target     prot opt source               destination         
+1    SBCBLOCK   all  --  anywhere             anywhere             /* Regra Criada pelo SBC Asterisk »»»BRUTE FORCE««« */
+
+Chain OUTPUT (policy ACCEPT)
+num  target     prot opt source               destination         
+1    SBCBLOCK   all  --  anywhere             anywhere             /* Regra Criada pelo SBC Asterisk »»»BRUTE FORCE««« */
+
+Chain SBCBLOCK (3 references)
+num  target     prot opt source               destination         
+1    LOG        all  --  hsilabinfo-70.hsi    anywhere             /* Log Criado pelo SBC Asterisk »»»BRUTE FORCE««« */ LOG level warning prefix "SBC LIST DROP"
+2    DROP       all  --  hsilabinfo-70.hsi    anywhere             /* Regra Criada pelo SBC Asterisk »»»BRUTE FORCE««« */
+
+
+
+2 - Removendo o IP Bloqueado pelo IPBX através do script "remove_ip.sh"
+# cd /etc/asterisk
+# ./remove_ip.sh 192.168.25.59
+
+
+###############################################
+
+ IP 192.168.25.59 Desbloqueado no AstSBC 
+
+###############################################

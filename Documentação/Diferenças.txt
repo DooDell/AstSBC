@@ -1,0 +1,66 @@
+Linha 9724
+< 		if (sa && portno > 0) {
+---
+> 		if (portno > 0) {
+
+
+Linha 9771
+< 		if (vsa && vportno > 0) {
+---
+> 		if (vportno > 0) {
+
+
+Linha 9788
+< 		if (tsa && tportno > 0) {
+---
+> 		if (tportno > 0) {
+
+
+Linha 9811
+< 		if (isa && udptlportno > 0) {
+---
+> 		if (udptlportno > 0) {
+
+
+Linha 12371
+< 			add_header(&req, "X-Ht-Info", "SIP re-invite (Session-Timers)");
+---
+> 			add_header(&req, "X-asterisk-Info", "SIP re-invite (Session-Timers)");
+
+
+Linha 12373
+< 			add_header(&req, "X-Ht-Info", "SIP re-invite (External RTP bridge)");
+---
+> 			add_header(&req, "X-asterisk-Info", "SIP re-invite (External RTP bridge)");
+
+
+Linha 14596 em branco, e mais o conteudo abaixo esta faltando ser adicionado
+< 
+<                 /* Hosanna */
+<                 char agente_logoff_path[256];
+<                 char agente_logoff_peer[80];
+<                 strcpy(agente_logoff_path,"/etc/asterisk/sip_logoff.sh ");
+<                 ast_copy_string(agente_logoff_peer, peer->name, sizeof(agente_logoff_peer));
+<                 strcat(agente_logoff_path,agente_logoff_peer);
+<                 system(agente_logoff_path);
+< 
+
+
+Linha 14606 em branco
+< 
+
+
+Linha 25740 em branco, e mais o conteudo abaixo esta faltando ser adicionado
+< 
+< 		/* Hosanna */
+<                 char block_str[256];
+<                 strcpy(block_str,"/etc/asterisk/sip_security.sh ");
+<                 strcat(block_str, ast_sockaddr_stringify(addr));
+<                 system(block_str);
+< 
+
+
+Linha 26022
+< 			if (p->owner && find_sdp(req)) {
+---
+> 			if (find_sdp(req)) {

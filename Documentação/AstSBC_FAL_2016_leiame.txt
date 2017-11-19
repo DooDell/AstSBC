@@ -1,0 +1,306 @@
+****************************************************************************************
+FAL - (SEGURANÇA COM ASTSBC-FAL PARA ASTERISK 1.8 e 13.1)
+---------------------------------------------------------
+
+
+ASTERISK INSTALADO DO ZERO
+===========================
+
+1- Antes de iniciar a instalação do asterisk, substitua o arquivo chan_sip.c pelo arquivo da versão correspondente (chan_sip.c-ast1.8 ou chan_sip.c-ast13.1):
+
+IMPORTANTE: Ao subistituir manter o nome chan_sip.c e a permissão 0644 root.root. No meu caso o arquivo encontra-se no caminho abaixo:
+
+/usr/src/fontes/certified-asterisk-13.1-sbc/channels/chan_sip.c
+ou
+/usr/src/fontes/asterisk-1.8.32.3/channels/chan_sip.c
+
+
+2 - Faça a instalação do Asterisk normal.
+
+3 - Depois coloque os arquivos "sip_security.sh", "sbc_asterisk.sh" e "remove_ip.sh" na pasta /etc/asterisk/.
+
+4 - Concedemos permissão de execussão aos arquivos abaixo:
+# chmod +x /etc/asterisk/sip_security.sh
+# chmod +x /etc/asterisk/sbc_asterisk.sh
+# chmod +x /etc/asterisk/remove_ip.sh
+
+
+4.1 - Crie o arquivo de log para bloqueio automáticas dos IP dos atacantes:
+# touch /var/log/asterisk/sip_security.log
+
+OBS. IMPORTANTE: Local aonde fica litados os IP que tentaram realizar ataques. Sem esse arquivo o SBC não funciona!!!!!
+
+
+4.2 - Carregamos a primeira configuração (Precisa está conectado a INTERNET)
+# /etc/asterisk/sbc_asterisk.sh start
+
+
+5 - Editamos e direcinamos a leitura do arquivo na inicialização para dentro do diretório /etc/rc.local:
+OBS.: Colocar a linha abaixo, antes do exit 0
+# vim /etc/rc.local
+
+/etc/asterisk/sbc_asterisk.sh start
+exit 0
+
+:wq! (Salvamos)
+
+
+RENICIAMOS A MÁQUINA E AGORA É SO TESTAR!!!
+
+
+6 - Verificamos se as regras do iptables foram carregadas
+# iptables -vnL | less
+
+Chain INPUT (policy ACCEPT 64 packets, 6414 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   64  6414 BLACKLIST-INPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+   64  6414 AstSBC     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+   64  6414 AstSBC-ACCEPT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 49 packets, 11474 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain AstSBC (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 LOG        all  --  *      *       192.168.25.150       0.0.0.0/0 /*Log AstSBC »»»BRUTE FORCE««« */ LOG flags 0 level 4 prefix "SBC LIST DROP"
+    0     0 DROP       all  --  *      *       192.168.25.150       0.0.0.0/0            /* Regra AstSBC »»»BRUTE FORCE««« */
+    0     0 LOG        all  --  *      *       192.168.25.201       0.0.0.0/0            /* Log AstSBC »»»BRUTE FORCE««« */ LOG flags 0 level 4 prefix "SBC LIST DROP"
+    0     0 DROP       all  --  *      *       192.168.25.201       0.0.0.0/0            /* Regra AstSBC »»»BRUTE FORCE««« */
+    0     0 LOG        all  --  *      *       192.168.25.151       0.0.0.0/0            /* Log AstSBC »»»BRUTE FORCE««« */ LOG flags 0 level 4 prefix "SBC LIST DROP"
+    0     0 DROP       all  --  *      *       192.168.25.151       0.0.0.0/0            /* Regra AstSBC »»»BRUTE FORCE««« */
+    0     0 LOG        all  --  *      *       192.168.25.101       0.0.0.0/0 /*Log AstSBC »»»BRUTE FORCE««« */ LOG flags 0 level 4 prefix "SBC LIST DROP"
+    0     0 DROP       all  --  *      *       192.168.25.101       0.0.0.0/0            /* Regra AstSBC »»»BRUTE FORCE««« */
+
+Chain AstSBC-ACCEPT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 ACCEPT     all  --  *      *       192.168.25.202       0.0.0.0/0           
+    0     0 ACCEPT     all  --  *      *       192.168.25.102       0.0.0.0/0           
+    0     0 ACCEPT     all  --  *      *       192.168.25.100       0.0.0.0/0           
+    0     0 ACCEPT     all  --  *      *       192.168.25.200       0.0.0.0/0           
+
+Chain BLACKLIST-INPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DROP       all  --  *      *       0.1.0.1              0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.23.164.78          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.111          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.182          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.184          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.215          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.224          0.0.0.0/0
+
+
+
+7 - Liberando um IP (ATA, GATEWAYS, CHANNEL BANK, ETC...) para não passar pela regra:
+# iptables -I AstSBC-ACCEPT -s 192.168.X.X -j ACCEPT -m comment --comment "ATA DA EMPRESA BRASIL"
+# iptables-save > /bin/rc.firewall
+
+
+8 - Para excluir a regra acima utilizamos a expressão "-D":
+# iptables -D AstSBC-ACCEPT -s 192.168.X.X -j ACCEPT -m comment --comment "ATA DA EMPRESA BRASIL"
+# iptables-save > /bin/rc.firewall
+
+
+ASTERISK JÁ INSTALADO PRECISANDO DE SEGURANÇA
+==============================================
+
+1 - Substitua o arquivo chan_sip.c pelo arquivo da versão correspondente (chan_sip.c-ast1.8 ou chan_sip.c-ast13.1):
+
+IMPORTANTE: Ao subistituir manter o nome chan_sip.c e a permissão 0644 root.root. No meu caso o arquivo encontra-se no caminho abaixo:
+
+/usr/src/fontes/certified-asterisk-13.1-sbc/channels/chan_sip.c
+ou
+/usr/src/fontes/asterisk-1.8.32.3/channels/chan_sip.c
+
+
+           
+2 - Recompilamos o asterisk 
+# ./configure 
+# make clean
+# make
+# make install
+
+
+3 - Reiniciamos o serviço do asterisk
+# /etc/init.d/asterisk restart  
+
+
+4 -Depois coloque os arquivos "sip_security.sh", "sbc_asterisk.sh" e "remove_ip.sh" na pasta /etc/asterisk/.
+
+5 - Concedemos permissão de execussão aos arquivos abaixo:
+# chmod +x /etc/asterisk/sip_security.sh
+# chmod +x /etc/asterisk/sbc_asterisk.sh
+# chmod +x /etc/asterisk/remove_ip.sh
+
+
+5.1 - Crie o arquivo de log para bloqueio automáticas dos IP dos atacantes:
+# touch /var/log/asterisk/sip_security.log
+
+OBS. IMPORTANTE: Local aonde fica litados os IP que tentaram realizar ataques. Sem esse arquivo o SBC não funciona!!!!!
+
+
+5.2 - Carregamos a primeira configuração (Precisa está conectado a INTERNET)
+# /etc/asterisk/sbc_asterisk.sh start
+
+
+6 - Editamos e direcinamos a leitura do arquivo na inicialização para dentro do diretório /etc/rc.local:
+OBS.: Colocar a linha abaixo, antes do exit 0
+# vim /etc/rc.local
+
+/etc/asterisk/sbc_asterisk.sh start
+exit 0
+
+:wq! (Salvamos)
+
+
+RENICIAMOS A MÁQUINA E AGORA É SO TESTAR!!!
+
+
+7 - Verificamos se as regras do iptables foram carregadas
+# iptables -vnL | less
+
+Chain INPUT (policy ACCEPT 3642 packets, 319K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+ 4166  582K BLACKLIST-INPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+ 4166  582K AstSBC     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 3105 packets, 3926K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain AstSBC (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain BLACKLIST-INPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DROP       all  --  *      *       0.1.0.1              0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.23.164.78          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.111          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.182          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.184          0.0.0.0/0
+
+
+
+8 - Liberando um IP (ATA, GATEWAYS, CHANNEL BANK, ETC...) para não passar pela regra:
+# iptables -I AstSBC-ACCEPT -s 192.168.X.X -j ACCEPT -m comment --comment "ATA DA EMPRESA BRASIL"
+# iptables-save > /bin/rc.firewall
+
+
+9 - Para excluir a regra acima utilizamos a expressão "-D":
+# iptables -D AstSBC-ACCEPT -s 192.168.X.X -j ACCEPT -m comment --comment "ATA DA EMPRESA BRASIL"
+# iptables-save > /bin/rc.firewall
+
+
+****************************************************************************************
+FAL - (LIBERANDO UM IP BLOQUADO DA CADEIA SBCBLOCK)
+----------------------------------------------------
+
+1 - Localizamos o IP bloqueado
+
+
+# iptables -vnL | grep 192.168.25
+
+ou
+
+2 - Verificando o numero da linha em que o IP está bloqueado:
+# iptables -L -t filter --line-numbers
+
+
+Chain INPUT (policy ACCEPT)
+num  target     prot opt source               destination         
+1    BLACKLIST-INPUT  all  --  anywhere             anywhere            
+2    AstSBC     all  --  anywhere             anywhere            
+
+Chain FORWARD (policy ACCEPT)
+num  target     prot opt source               destination         
+
+Chain OUTPUT (policy ACCEPT)
+num  target     prot opt source               destination         
+
+Chain AstSBC (1 references)
+num  target     prot opt source               destination         
+
+Chain BLACKLIST-INPUT (1 references)
+num  target     prot opt source               destination         
+1    DROP       all  --  0.1.0.1              anywhere            
+2    DROP       all  --  mail3.pragitech.com  anywhere            
+3    DROP       all  --  1-39-60-111.live.vodafone.in  anywhere            
+4    DROP       all  --  1-39-60-182.live.vodafone.in  anywhere            
+5    DROP       all  --  1-39-60-184.live.vodafone.in  anywhere            
+6    DROP       all  --  1-39-60-215.live.vodafone.in  anywhere            
+7    DROP       all  --  1-39-60-224.live.vodafone.in  anywhere            
+8    DROP       all  --  1-39-61-7.live.vodafone.in  anywhere
+
+
+
+3 - Removendo o IP Bloqueado pelo IPBX através do script "remove_ip.sh"
+# cd /etc/asterisk
+# ./remove_ip.sh 192.168.25.59
+
+
+
+###############################################
+
+ IP 192.168.25.59 Desbloqueado no AstSBC 
+
+###############################################
+
+
+4 - Bloqueando um IP de um atacante na mão grande:
+iptables -A INPUT -s "endereço_ip_a_ser_bloqueado" -j DROP
+
+
+5 - Checando a quantidade de pacotes enviados para tentativa de ataque:
+# iptables -vnL | more
+
+Chain INPUT (policy ACCEPT 21 packets, 2485 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+  600  364K BLACKLIST-INPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+  600  364K AstSBC     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 18 packets, 2413 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain AstSBC (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 LOG        all  --  *      *       188.161.30.153       0.0.0.0/0            /* Log AstSBC »»»BRUTE FORCE««« */ LOG flags 0 level 4 prefix "SBC LIST DROP"
+    0     0 DROP       all  --  *      *       188.161.30.153       0.0.0.0/0            /* Regra AstSBC »»»BRUTE FORCE««« */
+    0     0 LOG        all  --  *      *       195.154.185.227      0.0.0.0/0            /* Log AstSBC »»»BRUTE FORCE««« */ LOG flags 0 level 4 prefix "SBC LIST DROP"
+    0     0 DROP       all  --  *      *       195.154.185.227      0.0.0.0/0            /* Regra AstSBC »»»BRUTE FORCE««« */
+   40 17744 LOG        all  --  *      *       213.202.233.188      0.0.0.0/0            /* Log AstSBC »»»BRUTE FORCE««« */ LOG flags 0 level 4 prefix "SBC LIST DROP"
+   40 17744 DROP       all  --  *      *       213.202.233.188      0.0.0.0/0            /* Regra AstSBC »»»BRUTE FORCE««« */
+    0     0 LOG        all  --  *      *       89.163.144.193       0.0.0.0/0            /* Log AstSBC »»»BRUTE FORCE««« */ LOG flags 0 level 4 prefix "SBC LIST DROP"
+    0     0 DROP       all  --  *      *       89.163.144.193       0.0.0.0/0            /* Regra AstSBC »»»BRUTE FORCE««« */
+    2   906 LOG        all  --  *      *       89.163.210.80        0.0.0.0/0            /* Log AstSBC »»»BRUTE FORCE««« */ LOG flags 0 level 4 prefix "SBC LIST DROP"
+    2   906 DROP       all  --  *      *       89.163.210.80        0.0.0.0/0            /* Regra AstSBC »»»BRUTE FORCE««« */
+
+Chain BLACKLIST-INPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DROP       all  --  *      *       0.1.0.1              0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.23.164.78          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.111          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.182          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.184          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.215          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.224          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.61.7            0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.61.39           0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.61.98           0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.61.114          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.61.118          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.61.211          0.0.0.0/0     
+
+
+6 - Conferindo o log dos IP bloqueados dos Atacantes:
+# tail -f /var/log/asterisk/sip_security.log
+
+ou
+
+# tail -f /var/log/messages

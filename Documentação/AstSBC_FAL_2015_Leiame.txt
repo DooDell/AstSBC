@@ -1,0 +1,184 @@
+FAL - (SEGURANÇA COM ASTSBC-FAL PARA ASTERISK 1.8 e 13.1)
+---------------------------------------------------------
+
+ASTERISK INSTALADO DO ZERO
+===========================
+
+1- Antes de iniciar a instalação do asterisk, substitua o arquivo chan_sip.c pelo arquivo da versão correspondente (chan_sip.c-ast1.8 ou chan_sip.c-ast13.1):
+
+IMPORTANTE: Ao subistituir manter o nome chan_sip.c e a permissão 0644 root.root. No meu caso o arquivo encontra-se no caminho abaixo:
+
+/usr/src/fontes/certified-asterisk-13.1-sbc/channels/chan_sip.c
+ou
+/usr/src/fontes/asterisk-1.8.32.3/channels/chan_sip.c
+
+
+2 - Faça a instalação do Asterisk normal.
+
+3 - Depois coloque os arquivos "sip_security.sh", "sbc_asterisk.sh" e "remove_ip.sh" na pasta /etc/asterisk/.
+
+4 - Concedemos permissão de execussão aos arquivos abaixo:
+# chmod +x /etc/asterisk/sip_security.sh
+# chmod +x /etc/asterisk/sbc_asterisk.sh
+# chmod +x /etc/asterisk/remove_ip.sh
+
+5 - Editamos e direcinamos a leitura do arquivo na inicialização para dentro do diretório /etc/rc.local:
+OBS.: Colocar a linha abaixo, antes do exit 0
+# vim /etc/rc.local
+
+/etc/asterisk/sbc_asterisk.sh start
+exit 0
+
+:wq! (Salvamos)
+
+
+RENICIAMOS A MÁQUINA E AGORA É SO TESTAR!!!
+
+
+6 - Verificamos se as regras do iptables foram carregadas
+# iptables -vnL
+
+Chain INPUT (policy ACCEPT 3642 packets, 319K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+ 4166  582K BLACKLIST-INPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+ 4166  582K AstSBC     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 3105 packets, 3926K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain AstSBC (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain BLACKLIST-INPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DROP       all  --  *      *       0.1.0.1              0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.23.164.78          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.111          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.182          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.184          0.0.0.0/0
+
+
+
+
+
+ASTERISK JÁ INSTALADO PRECISANDO DE SEGURANÇA
+==============================================
+
+1 - Substitua o arquivo chan_sip.c pelo arquivo da versão correspondente (chan_sip.c-ast1.8 ou chan_sip.c-ast13.1):
+
+IMPORTANTE: Ao subistituir manter o nome chan_sip.c e a permissão 0644 root.root. No meu caso o arquivo encontra-se no caminho abaixo:
+
+/usr/src/fontes/certified-asterisk-13.1-sbc/channels/chan_sip.c
+ou
+/usr/src/fontes/asterisk-1.8.32.3/channels/chan_sip.c
+
+
+	       
+2 - Recompilamos o asterisk 
+# ./configure 
+# make clean
+# make
+# make install
+
+
+3 - Reiniciamos o serviço do asterisk
+# /etc/init.d/asterisk restart  
+
+
+4 -Depois coloque os arquivos "sip_security.sh", "sbc_asterisk.sh" e "remove_ip.sh" na pasta /etc/asterisk/.
+
+5 - Concedemos permissão de execussão aos arquivos abaixo:
+# chmod +x /etc/asterisk/sip_security.sh
+# chmod +x /etc/asterisk/sbc_asterisk.sh
+# chmod +x /etc/asterisk/remove_ip.sh
+
+
+6 - Editamos e direcinamos a leitura do arquivo na inicialização para dentro do diretório /etc/rc.local:
+OBS.: Colocar a linha abaixo, antes do exit 0
+# vim /etc/rc.local
+
+/etc/asterisk/sbc_asterisk.sh start
+exit 0
+
+:wq! (Salvamos)
+
+
+RENICIAMOS A MÁQUINA E AGORA É SO TESTAR!!!
+
+
+7 - Verificamos se as regras do iptables foram carregadas
+# iptables -vnL
+
+Chain INPUT (policy ACCEPT 3642 packets, 319K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+ 4166  582K BLACKLIST-INPUT  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+ 4166  582K AstSBC     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 3105 packets, 3926K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain AstSBC (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain BLACKLIST-INPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DROP       all  --  *      *       0.1.0.1              0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.23.164.78          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.111          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.182          0.0.0.0/0           
+    0     0 DROP       all  --  *      *       1.39.60.184          0.0.0.0/0
+
+
+
+
+****************************************************************************************
+FAL - (LIBERANDO UM IP BLOQUADO DA CADEIA SBCBLOCK)
+----------------------------------------------------
+
+1 - Verificando o numero da linha em que o IP está bloqueado:
+# iptables -L -t filter --line-numbers
+
+
+Chain INPUT (policy ACCEPT)
+num  target     prot opt source               destination         
+1    BLACKLIST-INPUT  all  --  anywhere             anywhere            
+2    AstSBC     all  --  anywhere             anywhere            
+
+Chain FORWARD (policy ACCEPT)
+num  target     prot opt source               destination         
+
+Chain OUTPUT (policy ACCEPT)
+num  target     prot opt source               destination         
+
+Chain AstSBC (1 references)
+num  target     prot opt source               destination         
+
+Chain BLACKLIST-INPUT (1 references)
+num  target     prot opt source               destination         
+1    DROP       all  --  0.1.0.1              anywhere            
+2    DROP       all  --  mail3.pragitech.com  anywhere            
+3    DROP       all  --  1-39-60-111.live.vodafone.in  anywhere            
+4    DROP       all  --  1-39-60-182.live.vodafone.in  anywhere            
+5    DROP       all  --  1-39-60-184.live.vodafone.in  anywhere            
+6    DROP       all  --  1-39-60-215.live.vodafone.in  anywhere            
+7    DROP       all  --  1-39-60-224.live.vodafone.in  anywhere            
+8    DROP       all  --  1-39-61-7.live.vodafone.in  anywhere
+
+
+
+2 - Removendo o IP Bloqueado pelo IPBX através do script "remove_ip.sh"
+# cd /etc/asterisk
+# ./remove_ip.sh 192.168.25.59
+
+
+###############################################
+
+ IP 192.168.25.59 Desbloqueado no AstSBC 
+
+###############################################
