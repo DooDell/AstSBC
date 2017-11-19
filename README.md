@@ -1,16 +1,16 @@
-### AstSBC
+# AstSBC
 
-# Session Border Controller baseado em Digium™ Asterisk® Framework.
+### Session Border Controller baseado em Digium™ Asterisk® Framework.
 
 O AstSBC é um controlador sessões de borda SIP seguro criado para provedores de telefonia residenciais e empresariais de alto volume suportando até 2000 chamadas simultâneas por servidor.
 
-# Visão Geral do Produto:
+### Visão Geral do Produto:
 
 Um Session Border Controller é um dispositivo normalmente usado em redes VoIP para exercer controle sobre a sinalização e os fluxos de mídia envolvendo o estabelecimento, condução e finalização de chamadas telefônicas e sessões multimídia.
 
 Em alguns casos não é possível ligar diretamente o SipProxy a provedores de serviço. Um dos casos mais comuns é o de operadoras que fornecem um cabo de rede com um único endereço IP para sinalização e mídia. Como no SipProxy a sinalização e a mídia ficam em servidores separados, não é possível a conexão. Em alguns casos também há a necessidade de transcodificar os codecs suportados pela operadora para os codecs disponíveis aos clientes. Os SBC são normalmente posicionados na interconexão entre redes de diferentes provedores para fazer o emparelhamento. Como em muitos casos os fornecedores de SIP trunking fornecem um único endereço IP para sinalização é mídia, é necessário um ponto de demarcação onde esta conexão possa ser terminada. Algumas traduções e conversões necessárias podem ser necessárias no AstSBC.
 
-# Funções do AstSBC:
+### Funções do AstSBC:
 
 O AstSBC é um produto criado para permitir a interligação do Softswitch PBX IP com entroncamentos SIP fornecidas pelas principais operadoras no país. Principais funções do AstSBC:
 1.	Ponto de demarcação do entroncamento SIP
@@ -19,7 +19,7 @@ O AstSBC é um produto criado para permitir a interligação do Softswitch PBX I
 4.	Normalização SIP e manipulação dos cabeçalhos
 5.	Transcodificação de mídia
 
-# Capacidade Operacional e Especificações:
+### Capacidade Operacional e Especificações:
 •	Processador Intel Xeon 3 Ghz
 •	Até 4 interfaces gigabit Ethernet (opcional)
 •	Placa de transcodificação p/ até 2000 sessões de transcoding (opcional)
@@ -41,5 +41,5 @@ Os appliances do AstSBC pode ser de qualquer fabricante do mercado brasileiro. O
 
 Atualmente o projeto faz uso do Digium™ Asterisk® Framework. Mas já estamos estudando para fazer o mesmo em OpenSIPs ou Kamalio.
 
-# Team AstSBC.
+### Team AstSBC.
 
